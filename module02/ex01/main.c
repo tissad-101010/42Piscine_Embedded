@@ -6,7 +6,7 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:16:02 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/07 16:16:52 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/08 12:39:59 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static inline void timer_init(void) {
     TCCR1B |= (1 << CS12) | (1 << CS10); 
 	// OCR1A is the Output Compare Register 1 A
 	// Set the value that Timer1 will compare with
-    OCR1A = (F_CPU / 1024 * 2) - 1;
+    OCR1A = (F_CPU / 1024 * 2);
 	// TIMSK1 is the Timer/Counter1 Interrupt Mask Register	
 	// OCIE1A: Timer/Counter1, Output Compare A Match Interrupt Enable
     TIMSK1 |= (1 << OCIE1A);
