@@ -6,25 +6,24 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 17:35:52 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/07 18:45:36 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/08 11:50:48 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 void init_rgb();
 void set_rgb(uint8_t r, uint8_t g, uint8_t b);
 void wheel(uint8_t pos);
 
+uint8_t  pos = 0;
+
 int main(void) {
     init_rgb();
-
+    sei();
     while (1) {
-        for (uint8_t i = 0; i < 255; i++) {
-            wheel(i); 
-            _delay_ms(100);
-        }
     }
 
     return 0;
@@ -47,7 +46,16 @@ void init_rgb() {
     // COM2B1 to set non-inverting mode
     TCCR2A |= (1 << COM2B1); 
     // CS21 to set prescaler 8
-    TCCR2B |= (1 << CS21); 
+    TCCR2B |= (1 << CS21);
+
+    // Timer1   
+    // Mode CTC, OCR1A as top
+    TCCR1B |= (1 << WGM12);
+    // Prescaler 64 (16MHz / 64 = 250 kHz, donc 1 tick = 4µs)
+    TCCR1B |= (1 << CS11) | (1 << CS10);
+    // (250 kHz * 100 ms = 25000 ticks) interrupt every 100 ms
+    OCR1A = 25000;
+    TIMSK1 |= (1 << OCIE1A); // Enable interrupt on compare match
 }
 
 void set_rgb(uint8_t r, uint8_t g, uint8_t b) {
@@ -71,4 +79,10 @@ void wheel(uint8_t pos) {
         pos -= 170;
         set_rgb(pos * 3, 255 - pos * 3, 0);
     }
+}
+
+ISR(TIMER1_COMPA_vect) {
+    pos++;
+    if (pos > 255) pos = 0; 
+    wheel(pos);
 }
