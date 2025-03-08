@@ -6,7 +6,7 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 09:16:02 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/07 15:19:58 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/08 12:33:42 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,24 @@
 // USART Universal Synchronous and Asynchronous serial Receiver and Transmitter
 // USART is a way to communicate between devices. It is a serial communication protocol.
 
-void uart_init(uint16_t ubrr);
-void uart_tx(uint8_t data);
+static inline void uart_init(uint16_t ubrr);
+static inline void uart_tx(uint8_t data);
+static inline void timer_init(void);
 
 int main(void)
 {
 	uart_init(UBRR);
+	timer_init();
+	sei();
 	while (1)
 	{
-		uart_tx('Z');
-		_delay_ms(1000);
+
 	}
 	
 	return 0;
 }
 
-void uart_init(uint16_t ubrr)
+static inline void uart_init(uint16_t ubrr)
 {
 
 	// UCSR0A is the USART Control and Status Register A
@@ -56,7 +58,21 @@ void uart_init(uint16_t ubrr)
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // 0b110
 }
 
-void uart_tx(uint8_t data) {
+static inline void timer_init(void) {
+	// TCCR1B is the Timer/Counter1 Control Register B
+	// WGM12: Waveform Generation Mode
+    TCCR1B |= (1 << WGM12); 
+	// CS12, CS11, CS10: Clock Select, Set prescaler to 1024
+    TCCR1B |= (1 << CS12) | (1 << CS10); 
+	// OCR1A is the Output Compare Register 1 A
+	// Set the value that Timer1 will compare with
+    OCR1A = (F_CPU / 1024 * 2); // =  15625 < 65536 1hz
+	// TIMSK1 is the Timer/Counter1 Interrupt Mask Register	
+	// OCIE1A: Timer/Counter1, Output Compare A Match Interrupt Enable
+    TIMSK1 |= (1 << OCIE1A);
+}
+
+static inline void uart_tx(uint8_t data) {
 	
     while (!(UCSR0A & (1 << UDRE0)))// Wait until data register is empty
         ;
@@ -65,4 +81,9 @@ void uart_tx(uint8_t data) {
 	// UDR0 is the USART buffer
 	// if UDRE0 is set, the buffer is empty and can be written to
     UDR0 = data;
+}
+
+// ISR is a macro that tells the compiler that the function is an interrupt service routine
+ISR(TIMER1_COMPA_vect) {
+	uart_tx('Z');
 }
