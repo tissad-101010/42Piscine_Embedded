@@ -6,7 +6,7 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 13:25:05 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/14 12:02:44 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/14 14:31:41 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ void uart_puts(const char *str)
 	}
 }
 
-void uart_putnbr(uint16_t n, char *base)
+void uart_putnbr(int32_t n, char *base)
 {
-	char BUFFER[100];
+	char BUFFER[16];
 	itoa_base(n, BUFFER, base);
 	uart_puts(BUFFER);
 }

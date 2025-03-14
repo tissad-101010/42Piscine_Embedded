@@ -6,7 +6,7 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 13:26:16 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/14 12:03:26 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/14 12:33:06 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void uart_init(uint16_t ubrr);
 void uart_tx(char data);
 char uart_rx(void);
 void uart_puts(const char *str);
-void itoa_base(uint16_t value, char *buffer, char *base);
-void uart_putnbr(uint16_t n, char *base);
+void uart_putnbr(int32_t value, char *base);
+void itoa_base(int32_t value, char *buffer, char *base);
+
 
 #endif

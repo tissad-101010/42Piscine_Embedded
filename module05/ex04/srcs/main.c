@@ -6,34 +6,32 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 13:32:55 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/14 16:31:28 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/14 15:52:03 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <uart.h>
 #include <adc.h>
-
+#include <led.h>
+#include <timer.h>
 
 int main(void)
 {
-
-	
 	uart_init(UBRR);
-	ADC_init();
-	while (1)
-	{
-
-	}
+	adc_init();
+	ddr_init();
+	rgb_init();
+	timer_init();
+	while (1);
 	return (0);
 }
 
-ISR(ADC_vect)
+
+ISR(TIMER1_OVF_vect)
 {
-	uart_putnbr(ADC_get_pot(), HEXA);
-	uart_puts(", ");
-	uart_putnbr(ADC_get_ldr(), HEXA);
-	uart_puts(", ");
-	uart_putnbr(ADC_get_ntc(), HEXA);
+	uint8_t result = adc_read();
+	set_led(result);
+	
+	uart_putnbr(result, DECIMAL);
 	uart_puts("\n\r");
-	_delay_ms(20);
 }

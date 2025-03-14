@@ -6,7 +6,7 @@
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 13:25:05 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/13 16:27:48 by tissad           ###   ########.fr       */
+/*   Updated: 2025/03/14 15:58:28 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void uart_init(uint16_t ubrr)
 	// UCSR0C: |UMSEL01|UMSEL00|UPM01|UPM00|USBS0|UCSZ01|UCSZ00|UCPOL0
 	// UCSZ01 = 1 and UCSZ00 = 1 sets the data size to 8-bit
 	UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // 0b110
-	sei(); // Enable global interrupts
+
 }
 
 // Function to send data (character)
@@ -70,4 +70,11 @@ void uart_puts(const char *str)
 		uart_tx(*str);
 		str++;
 	}
+}
+
+void uart_putnbr(int32_t n, char *base)
+{
+	char BUFFER[16];
+	itoa_base(n, BUFFER, base);
+	uart_puts(BUFFER);
 }

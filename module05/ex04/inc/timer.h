@@ -1,39 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   timer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tissad <tissad@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/13 13:32:55 by tissad            #+#    #+#             */
-/*   Updated: 2025/03/14 16:31:28 by tissad           ###   ########.fr       */
+/*   Created: 2025/03/14 15:45:22 by tissad            #+#    #+#             */
+/*   Updated: 2025/03/14 15:45:41 by tissad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <uart.h>
-#include <adc.h>
+#ifndef TIMER_H
 
+# define TIMER_H
 
-int main(void)
-{
+# include <avr/io.h>
+# include <avr/interrupt.h>
+# include <util/delay.h>
 
-	
-	uart_init(UBRR);
-	ADC_init();
-	while (1)
-	{
+void timer_init();
 
-	}
-	return (0);
-}
-
-ISR(ADC_vect)
-{
-	uart_putnbr(ADC_get_pot(), HEXA);
-	uart_puts(", ");
-	uart_putnbr(ADC_get_ldr(), HEXA);
-	uart_puts(", ");
-	uart_putnbr(ADC_get_ntc(), HEXA);
-	uart_puts("\n\r");
-	_delay_ms(20);
-}
+#endif
